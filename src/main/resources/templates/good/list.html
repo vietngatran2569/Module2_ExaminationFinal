@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<br/><br/><br/>
+<a href="/create-good"><button type="button">Create new good</button></a>
+<br/>
+
+<h1>Goods</h1>
+<form>
+    Search by name:
+    <input name="s" type="text"/>
+    <input type="submit" value="Search"/>
+</form>
+<br/>
+<p><a href="/sortByPriceAsc" ><button type="button">Sort By Price Asc</button></a></p>
+<p><a href="/sortByPriceDesc"><button type="button">Sort By Price Desc</button></a></p>
+<form action="/searchByCategory" onchange="this.submit()">
+    <a>Search By Category </a>
+    <select name="search">
+        <option value=-1></option>
+        <option th:each="d:${categories}" th:text="${d.name}" th:value="${d.getId()}" th:selected="(${d.getId()} == ${search})"></option>
+    </select>
+</form>
+<table border="1">
+    <tr>
+        <th>NAME</th>
+        <th>PRICE</th>
+        <th>QUANTITY</th>
+        <th>IMPORT_DATE</th>
+        <th>DESCRIPTION</th>
+        <th>Category'Name</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    <th:block th:each="x : ${goods}">
+        <tr>
+            <td th:text="${x.name}"></td>
+            <td th:text="${x.price}">
+            <td th:text="${x.quantity}">
+            <td th:text="${x.importDate}">
+            <td th:text="${x.description}">
+            <td th:text="${x.getCategory().getName()}"></td>
+            <td><a th:href="@{/edit-good/__${x.id}__ }">Edit</a></td>
+            <td><a th:href="@{/delete-good/__${x.id}__ }">Delete</a></td>
+        </tr>
+    </th:block>
+    <div>
+        <a th:href="@{'/goods'(page=${goods.number - 1})}" th:if="${goods.hasPrevious()}">Previous</a>
+        <span th:text="${goods.number + 1}"></span>/<span th:text="${goods.totalPages}"></span>
+        <a th:href="@{'/goods'(page=${goods.number + 1})}" th:if="${goods.hasNext()}">Next</a>
+    </div>
+</table>
+</body>
+</html>
